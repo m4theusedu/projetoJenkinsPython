@@ -12,7 +12,6 @@ def test_subtrair():
     calc = Calculadora()
     assert calc.subtrair(10, 4) == 6
 
-
 def test_multiplicar():
     calc = Calculadora()
     assert calc.multiplicar(3, 4) == 12
