@@ -1,14 +1,18 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON = "C:\\Users\\Diego\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe"
+    }
+
     stages {
         stage('Preparar ambiente') {
             steps {
                 bat """
-                    py -m venv venv
+                    "%PYTHON%" -m venv venv
                     call venv\\Scripts\\activate.bat
-                    py -m pip install --upgrade pip
-                    py -m pip install -r requirements.txt
+                    python -m pip install --upgrade pip
+                    python -m pip install -r requirements.txt
                 """
             }
         }
@@ -17,7 +21,7 @@ pipeline {
             steps {
                 bat """
                     call venv\\Scripts\\activate.bat
-                    py -m pytest --junitxml=relatorio-testes.xml
+                    python -m pytest --junitxml=relatorio-testes.xml
                 """
             }
         }
@@ -26,7 +30,7 @@ pipeline {
             steps {
                 bat """
                     call venv\\Scripts\\activate.bat
-                    py -m compileall app
+                    python -m compileall app
                 """
             }
         }
@@ -35,7 +39,8 @@ pipeline {
             steps {
                 bat """
                     taskkill /F /IM python.exe /T || exit /B 0
-                    start /B py -m app.main
+                    call venv\\Scripts\\activate.bat
+                    start /B python -m app.main
                 """
             }
         }
