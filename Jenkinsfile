@@ -8,22 +8,13 @@ pipeline {
 
     stages {
         stage('Preparar Ambiente') {
-            steps {
-                bat """
-                    "%PYTHON%" -m venv venv
-                    call venv\\Scripts\\activate.bat
-                    python -m pip install --upgrade pip
-                    python -m pip install -r requirements.txt
-                """
-            }
+            
         }
 
         stage('Executar Testes') {
             steps {
-                bat """
-                    call venv\\Scripts\\activate.bat
-                    python -m pytest --junitxml=relatorio-testes.xml --cov=app --cov-report=html --cov-report=xml
-                """
+            bat 'python -m venv venv'
+            bat '.\\venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt'
             }
         }
 
