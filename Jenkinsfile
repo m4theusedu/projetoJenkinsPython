@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Preparar Ambiente') {
             steps {
-                // Só cria o ambiente virtual se a pasta venv ainda não existir
+                // Cria o ambiente virtual de forma segura apenas se ele não existir
                 bat 'if not exist venv python -m venv venv'
                 bat '.\\venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt'
             }
@@ -17,19 +17,19 @@ pipeline {
 
         stage('Executar Testes') {
             steps {
-            bat 'python -m venv venv'
-            bat '.\\venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt'
+                // Ativa a venv existente e roda os testes reais gerando os relatórios esperados pelo pós-build
+                bat '.\\venv\\Scripts\\activate && pytest --junitxml=relatorio-testes.xml --cov=app --cov-report=xml --cov-report=html'
             }
         }
 
-        //stage('Analise de Vulnerabilidades') {
-    //steps {
-       //dependencyCheck(
-            //odcInstallation: 'DependencyCheck',
-           // additionalArguments: '--scan .'
-        //)
-   // }
-//}
+        // stage('Analise de Vulnerabilidades') {
+        //     steps {
+        //         dependencyCheck(
+        //             odcInstallation: 'DependencyCheck',
+        //             additionalArguments: '--scan .'
+        //         )
+        //     }
+        // }
 
         stage('Build') {
             steps {
