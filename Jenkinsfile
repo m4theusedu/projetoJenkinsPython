@@ -8,7 +8,11 @@ pipeline {
 
     stages {
         stage('Preparar Ambiente') {
-            
+            steps {
+                // Os comandos PRECISAM estar dentro do bloco steps
+                bat 'python -m venv venv'
+                bat '.\\venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt'
+            }
         }
 
         stage('Executar Testes') {
